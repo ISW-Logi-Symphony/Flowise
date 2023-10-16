@@ -145,7 +145,8 @@ export class App {
 
         // Logi Symphony authorization check.
         if (process.env.LOGI_SYMPHONY_URL) {
-            const logiSymphony = await import('./utils/LogiSymphony/logisymphony')
+            const importPath = './utils/LogiSymphony/logisymphony'
+            const logiSymphony = await import(importPath)
             logiSymphony.setupRequestAuthorization(this.app)
         }
 
@@ -1302,7 +1303,8 @@ export class App {
 
             // Logi Symphony session ID override config injection check.
             if (process.env.LOGI_SYMPHONY_URL) {
-                const logiSymphony = await import('./utils/LogiSymphony/logisymphony')
+                const importPath = './utils/LogiSymphony/logisymphony'
+                const logiSymphony = await import(importPath)
                 logiSymphony.checkSessionIdOverrideConfig(req, incomingInput)
             }
 
