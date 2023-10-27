@@ -1,25 +1,19 @@
 // assets
-import { IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconMenu2, IconSettings } from '@tabler/icons'
+import { IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconMenu2 } from '@tabler/icons'
 
 // constant
-const icons = { IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconMenu2, IconSettings }
+const icons = { IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconMenu2 }
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
-const dashboard = {
+const dashboardDetail = {
     id: 'dashboard',
     title: '',
     type: 'group',
     children: [
         {
-            id: 'expandList',
-            type: 'item',
-            icon: icons.IconMenu2,
-            breadcrumbs: true
-        },
-        {
             id: 'chatflows',
-            // title: 'Chatflows',
+            title: 'Chatflows',
             type: 'item',
             url: '/chatflows',
             icon: icons.IconHierarchy,
@@ -27,7 +21,7 @@ const dashboard = {
         },
         {
             id: 'marketplaces',
-            // title: 'Marketplaces',
+            title: 'Marketplaces',
             type: 'item',
             url: '/marketplaces',
             icon: icons.IconBuildingStore,
@@ -35,7 +29,7 @@ const dashboard = {
         },
         {
             id: 'tools',
-            // title: 'Tools',
+            title: 'Tools',
             type: 'item',
             url: '/tools',
             icon: icons.IconTool,
@@ -43,7 +37,7 @@ const dashboard = {
         },
         {
             id: 'credentials',
-            // title: 'Credentials',
+            title: 'Credentials',
             type: 'item',
             url: '/credentials',
             icon: icons.IconLock,
@@ -51,7 +45,7 @@ const dashboard = {
         },
         // {
         //     id: 'apikey',
-        //     // title: 'API Keys',
+        //     title: 'API Keys',
         //     type: 'item',
         //     url: '/apikey',
         //     icon: icons.IconKey,
@@ -60,9 +54,10 @@ const dashboard = {
         {
             id: 'settings',
             type: 'item',
+            title: 'Settings',
             icon: icons.IconSettings,
             breadcrumbs: true
         }
     ]
 }
-export default dashboard
+export default dashboardDetail
