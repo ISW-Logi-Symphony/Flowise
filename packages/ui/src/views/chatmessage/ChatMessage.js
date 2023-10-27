@@ -904,12 +904,12 @@ export const ChatMessage = ({ open, chatflowid, isDialog, previews, setPreviews 
                                 <div className='recording-control-buttons-container'>
                                     <IconButton onClick={onRecordingCancelled} size='small'>
                                         <IconX
-                                            color={loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#1e88e5'}
+                                            color={loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#278838'}
                                         />
                                     </IconButton>
                                     <IconButton onClick={onRecordingStopped} size='small'>
                                         <IconSend
-                                            color={loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#1e88e5'}
+                                            color={loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#278838'}
                                         />
                                     </IconButton>
                                 </div>
@@ -942,7 +942,7 @@ export const ChatMessage = ({ open, chatflowid, isDialog, previews, setPreviews 
                                             edge='start'
                                         >
                                             <IconPhotoPlus
-                                                color={loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#1e88e5'}
+                                                color={loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#278838'}
                                             />
                                         </IconButton>
                                     </InputAdornment>
@@ -961,7 +961,7 @@ export const ChatMessage = ({ open, chatflowid, isDialog, previews, setPreviews 
                                                 <IconMicrophone
                                                     className={'start-recording-button'}
                                                     color={
-                                                        loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#1e88e5'
+                                                        loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#278838'
                                                     }
                                                 />
                                             </IconButton>
@@ -977,7 +977,7 @@ export const ChatMessage = ({ open, chatflowid, isDialog, previews, setPreviews 
                                                 // Send icon SVG in input field
                                                 <IconSend
                                                     color={
-                                                        loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#1e88e5'
+                                                        loading || !chatflowid ? '#9e9e9e' : customization.isDarkMode ? 'white' : '#278838'
                                                     }
                                                 />
                                             )}
