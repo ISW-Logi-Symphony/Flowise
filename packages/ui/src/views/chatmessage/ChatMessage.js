@@ -47,7 +47,7 @@ import predictionApi from 'api/prediction'
 import useApi from 'hooks/useApi'
 
 // Const
-import { baseURL, maxScroll } from 'store/constant'
+import { coreURL, maxScroll, subpath } from 'store/constant'
 
 // Utils
 import { isValidURL, removeDuplicateURL, setLocalStorageChatflow } from 'utils/genericHelper'
@@ -560,7 +560,7 @@ export const ChatMessage = ({ open, chatflowid, isDialog, previews, setPreviews 
             setIsRecording(false)
 
             // SocketIO
-            socket = socketIOClient(baseURL)
+            socket = socketIOClient(coreURL, { path: subpath + '/socket.io' })
 
             socket.on('connect', () => {
                 setSocketIOClientId(socket.id)
