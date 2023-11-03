@@ -148,10 +148,13 @@ export class App {
 
         const upload = multer({ dest: `${path.join(__dirname, '..', 'uploads')}/` })
 
+        // Use an index router for the API calls so they can be mapped to the primary path.
+        var indexRouter = express.Router()
+
         // ----------------------------------------
         // Configure number of proxies in Host Environment
         // ----------------------------------------
-        this.app.get('/api/v1/ip', (request, response) => {
+        indexRouter.get('/api/v1/ip', (request, response) => {
             response.send({
                 ip: request.ip,
                 msg: 'See the returned IP address in the response. If it matches your current IP address ( which you can get by going to http://ip.nfriedly.com/ or https://api.ipify.org/ ), then the number of proxies is correct and the rate limiter should now work correctly. If not, increase the number of proxies by 1 until the IP address matches your own. Visit https://docs.flowiseai.com/deployment#rate-limit-setup-guide for more information.'
@@ -163,7 +166,7 @@ export class App {
         // ----------------------------------------
 
         // Get all component nodes
-        this.app.get('/api/v1/nodes', (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/nodes', (req: Request, res: Response) => {
             const returnData = []
             for (const nodeName in this.nodesPool.componentNodes) {
                 const clonedNode = cloneDeep(this.nodesPool.componentNodes[nodeName])
@@ -173,7 +176,7 @@ export class App {
         })
 
         // Get all component credentials
-        this.app.get('/api/v1/components-credentials', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/components-credentials', async (req: Request, res: Response) => {
             const returnData = []
             for (const credName in this.nodesPool.componentCredentials) {
                 const clonedCred = cloneDeep(this.nodesPool.componentCredentials[credName])
@@ -183,7 +186,7 @@ export class App {
         })
 
         // Get specific component node via name
-        this.app.get('/api/v1/nodes/:name', (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/nodes/:name', (req: Request, res: Response) => {
             if (Object.prototype.hasOwnProperty.call(this.nodesPool.componentNodes, req.params.name)) {
                 return res.json(this.nodesPool.componentNodes[req.params.name])
             } else {
@@ -192,7 +195,7 @@ export class App {
         })
 
         // Get component credential via name
-        this.app.get('/api/v1/components-credentials/:name', (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/components-credentials/:name', (req: Request, res: Response) => {
             if (!req.params.name.includes('&')) {
                 if (Object.prototype.hasOwnProperty.call(this.nodesPool.componentCredentials, req.params.name)) {
                     return res.json(this.nodesPool.componentCredentials[req.params.name])
@@ -213,7 +216,7 @@ export class App {
         })
 
         // Returns specific component node icon via name
-        this.app.get('/api/v1/node-icon/:name', (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/node-icon/:name', (req: Request, res: Response) => {
             if (Object.prototype.hasOwnProperty.call(this.nodesPool.componentNodes, req.params.name)) {
                 const nodeInstance = this.nodesPool.componentNodes[req.params.name]
                 if (nodeInstance.icon === undefined) {
@@ -232,7 +235,7 @@ export class App {
         })
 
         // Returns specific component credential icon via name
-        this.app.get('/api/v1/components-credentials-icon/:name', (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/components-credentials-icon/:name', (req: Request, res: Response) => {
             if (Object.prototype.hasOwnProperty.call(this.nodesPool.componentCredentials, req.params.name)) {
                 const credInstance = this.nodesPool.componentCredentials[req.params.name]
                 if (credInstance.icon === undefined) {
@@ -251,7 +254,7 @@ export class App {
         })
 
         // load async options
-        this.app.post('/api/v1/node-load-method/:name', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/node-load-method/:name', async (req: Request, res: Response) => {
             const nodeData: INodeData = req.body
             if (Object.prototype.hasOwnProperty.call(this.nodesPool.componentNodes, req.params.name)) {
                 try {
@@ -278,13 +281,13 @@ export class App {
         // ----------------------------------------
 
         // Get all chatflows
-        this.app.get('/api/v1/chatflows', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/chatflows', async (req: Request, res: Response) => {
             const chatflows: IChatFlow[] = await getAllChatFlow()
             return res.json(chatflows)
         })
 
         // Get specific chatflow via api key
-        this.app.get('/api/v1/chatflows/apikey/:apiKey', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/chatflows/apikey/:apiKey', async (req: Request, res: Response) => {
             try {
                 const apiKey = await getApiKey(req.params.apiKey)
                 if (!apiKey) return res.status(401).send('Unauthorized')
@@ -303,7 +306,7 @@ export class App {
         })
 
         // Get specific chatflow via id
-        this.app.get('/api/v1/chatflows/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/chatflows/:id', async (req: Request, res: Response) => {
             const chatflow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
                 id: req.params.id
             })
@@ -312,7 +315,7 @@ export class App {
         })
 
         // Get specific chatflow via id (PUBLIC endpoint, used when sharing chatbot link)
-        this.app.get('/api/v1/public-chatflows/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/public-chatflows/:id', async (req: Request, res: Response) => {
             const chatflow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
                 id: req.params.id
             })
@@ -322,7 +325,7 @@ export class App {
         })
 
         // Save chatflow
-        this.app.post('/api/v1/chatflows', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/chatflows', async (req: Request, res: Response) => {
             const body = req.body
             const newChatFlow = new ChatFlow()
             Object.assign(newChatFlow, body)
@@ -334,7 +337,7 @@ export class App {
         })
 
         // Update chatflow
-        this.app.put('/api/v1/chatflows/:id', async (req: Request, res: Response) => {
+        indexRouter.put('/api/v1/chatflows/:id', async (req: Request, res: Response) => {
             const chatflow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
                 id: req.params.id
             })
@@ -361,13 +364,13 @@ export class App {
         })
 
         // Delete chatflow via id
-        this.app.delete('/api/v1/chatflows/:id', async (req: Request, res: Response) => {
+        indexRouter.delete('/api/v1/chatflows/:id', async (req: Request, res: Response) => {
             const results = await this.AppDataSource.getRepository(ChatFlow).delete({ id: req.params.id })
             return res.json(results)
         })
 
         // Check if chatflow valid for streaming
-        this.app.get('/api/v1/chatflows-streaming/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/chatflows-streaming/:id', async (req: Request, res: Response) => {
             const chatflow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
                 id: req.params.id
             })
@@ -401,7 +404,7 @@ export class App {
         // ----------------------------------------
 
         // Get all chatmessages from chatflowid
-        this.app.get('/api/v1/chatmessage/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/chatmessage/:id', async (req: Request, res: Response) => {
             const chatmessages = await this.AppDataSource.getRepository(ChatMessage).find({
                 where: {
                     chatflowid: req.params.id
@@ -414,7 +417,7 @@ export class App {
         })
 
         // Add chatmessages for chatflowid
-        this.app.post('/api/v1/chatmessage/:id', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/chatmessage/:id', async (req: Request, res: Response) => {
             const body = req.body
             const newChatMessage = new ChatMessage()
             Object.assign(newChatMessage, body)
@@ -426,7 +429,7 @@ export class App {
         })
 
         // Delete all chatmessages from chatflowid
-        this.app.delete('/api/v1/chatmessage/:id', async (req: Request, res: Response) => {
+        indexRouter.delete('/api/v1/chatmessage/:id', async (req: Request, res: Response) => {
             const chatflow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
                 id: req.params.id
             })
@@ -449,7 +452,7 @@ export class App {
         // ----------------------------------------
 
         // Create new credential
-        this.app.post('/api/v1/credentials', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/credentials', async (req: Request, res: Response) => {
             const body = req.body
             const newCredential = await transformToCredentialEntity(body)
             const credential = this.AppDataSource.getRepository(Credential).create(newCredential)
@@ -458,7 +461,7 @@ export class App {
         })
 
         // Get all credentials
-        this.app.get('/api/v1/credentials', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/credentials', async (req: Request, res: Response) => {
             if (req.query.credentialName) {
                 let returnCredentials = []
                 if (Array.isArray(req.query.credentialName)) {
@@ -487,7 +490,7 @@ export class App {
         })
 
         // Get specific credential
-        this.app.get('/api/v1/credentials/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/credentials/:id', async (req: Request, res: Response) => {
             const credential = await this.AppDataSource.getRepository(Credential).findOneBy({
                 id: req.params.id
             })
@@ -508,7 +511,7 @@ export class App {
         })
 
         // Update credential
-        this.app.put('/api/v1/credentials/:id', async (req: Request, res: Response) => {
+        indexRouter.put('/api/v1/credentials/:id', async (req: Request, res: Response) => {
             const credential = await this.AppDataSource.getRepository(Credential).findOneBy({
                 id: req.params.id
             })
@@ -524,7 +527,7 @@ export class App {
         })
 
         // Delete all chatmessages from chatflowid
-        this.app.delete('/api/v1/credentials/:id', async (req: Request, res: Response) => {
+        indexRouter.delete('/api/v1/credentials/:id', async (req: Request, res: Response) => {
             const results = await this.AppDataSource.getRepository(Credential).delete({ id: req.params.id })
             return res.json(results)
         })
@@ -534,13 +537,13 @@ export class App {
         // ----------------------------------------
 
         // Get all tools
-        this.app.get('/api/v1/tools', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/tools', async (req: Request, res: Response) => {
             const tools = await this.AppDataSource.getRepository(Tool).find()
             return res.json(tools)
         })
 
         // Get specific tool
-        this.app.get('/api/v1/tools/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/tools/:id', async (req: Request, res: Response) => {
             const tool = await this.AppDataSource.getRepository(Tool).findOneBy({
                 id: req.params.id
             })
@@ -548,7 +551,7 @@ export class App {
         })
 
         // Add tool
-        this.app.post('/api/v1/tools', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/tools', async (req: Request, res: Response) => {
             const body = req.body
             const newTool = new Tool()
             Object.assign(newTool, body)
@@ -560,7 +563,7 @@ export class App {
         })
 
         // Update tool
-        this.app.put('/api/v1/tools/:id', async (req: Request, res: Response) => {
+        indexRouter.put('/api/v1/tools/:id', async (req: Request, res: Response) => {
             const tool = await this.AppDataSource.getRepository(Tool).findOneBy({
                 id: req.params.id
             })
@@ -581,7 +584,7 @@ export class App {
         })
 
         // Delete tool
-        this.app.delete('/api/v1/tools/:id', async (req: Request, res: Response) => {
+        indexRouter.delete('/api/v1/tools/:id', async (req: Request, res: Response) => {
             const results = await this.AppDataSource.getRepository(Tool).delete({ id: req.params.id })
             return res.json(results)
         })
@@ -590,7 +593,7 @@ export class App {
         // Configuration
         // ----------------------------------------
 
-        this.app.get('/api/v1/flow-config/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/flow-config/:id', async (req: Request, res: Response) => {
             const chatflow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
                 id: req.params.id
             })
@@ -602,13 +605,13 @@ export class App {
             return res.json(availableConfigs)
         })
 
-        this.app.post('/api/v1/node-config', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/node-config', async (req: Request, res: Response) => {
             const nodes = [{ data: req.body }] as IReactFlowNode[]
             const availableConfigs = findAvailableConfigs(nodes, this.nodesPool.componentCredentials)
             return res.json(availableConfigs)
         })
 
-        this.app.get('/api/v1/version', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/version', async (req: Request, res: Response) => {
             const getPackageJsonPath = (): string => {
                 const checkPaths = [
                     path.join(__dirname, '..', 'package.json'),
@@ -640,7 +643,7 @@ export class App {
         // Export Load Chatflow & ChatMessage & Apikeys
         // ----------------------------------------
 
-        this.app.get('/api/v1/database/export', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/database/export', async (req: Request, res: Response) => {
             const chatmessages = await this.AppDataSource.getRepository(ChatMessage).find()
             const chatflows = await this.AppDataSource.getRepository(ChatFlow).find()
             const apikeys = await getAPIKeys()
@@ -652,7 +655,7 @@ export class App {
             return res.json(result)
         })
 
-        this.app.post('/api/v1/database/load', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/database/load', async (req: Request, res: Response) => {
             const databaseItems: IDatabaseExport = req.body
 
             await this.AppDataSource.getRepository(ChatFlow).delete({})
@@ -692,7 +695,7 @@ export class App {
         // ----------------------------------------
 
         // Send input message and get prediction result (External)
-        this.app.post(
+        indexRouter.post(
             '/api/v1/prediction/:id',
             upload.array('files'),
             (req: Request, res: Response, next: NextFunction) => getRateLimiter(req, res, next),
@@ -702,7 +705,7 @@ export class App {
         )
 
         // Send input message and get prediction result (Internal)
-        this.app.post('/api/v1/internal-prediction/:id', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/internal-prediction/:id', async (req: Request, res: Response) => {
             await this.processPrediction(req, res, socketIO, true)
         })
 
@@ -711,7 +714,7 @@ export class App {
         // ----------------------------------------
 
         // Get all chatflows for marketplaces
-        this.app.get('/api/v1/marketplaces/chatflows', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/marketplaces/chatflows', async (req: Request, res: Response) => {
             const marketplaceDir = path.join(__dirname, '..', 'marketplaces', 'chatflows')
             const jsonsInDir = fs.readdirSync(marketplaceDir).filter((file) => path.extname(file) === '.json')
             const templates: any[] = []
@@ -737,7 +740,7 @@ export class App {
         })
 
         // Get all tools for marketplaces
-        this.app.get('/api/v1/marketplaces/tools', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/marketplaces/tools', async (req: Request, res: Response) => {
             const marketplaceDir = path.join(__dirname, '..', 'marketplaces', 'tools')
             const jsonsInDir = fs.readdirSync(marketplaceDir).filter((file) => path.extname(file) === '.json')
             const templates: any[] = []
@@ -760,31 +763,31 @@ export class App {
         // ----------------------------------------
 
         // Get api keys
-        this.app.get('/api/v1/apikey', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/apikey', async (req: Request, res: Response) => {
             const keys = await getAPIKeys()
             return res.json(keys)
         })
 
         // Add new api key
-        this.app.post('/api/v1/apikey', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/apikey', async (req: Request, res: Response) => {
             const keys = await addAPIKey(req.body.keyName)
             return res.json(keys)
         })
 
         // Update api key
-        this.app.put('/api/v1/apikey/:id', async (req: Request, res: Response) => {
+        indexRouter.put('/api/v1/apikey/:id', async (req: Request, res: Response) => {
             const keys = await updateAPIKey(req.params.id, req.body.keyName)
             return res.json(keys)
         })
 
         // Delete new api key
-        this.app.delete('/api/v1/apikey/:id', async (req: Request, res: Response) => {
+        indexRouter.delete('/api/v1/apikey/:id', async (req: Request, res: Response) => {
             const keys = await deleteAPIKey(req.params.id)
             return res.json(keys)
         })
 
         // Verify api key
-        this.app.get('/api/v1/verify/apikey/:apiKey', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/verify/apikey/:apiKey', async (req: Request, res: Response) => {
             try {
                 const apiKey = await getApiKey(req.params.apiKey)
                 if (!apiKey) return res.status(401).send('Unauthorized')
@@ -802,7 +805,11 @@ export class App {
         const uiBuildPath = path.join(packagePath, 'build')
         const uiHtmlPath = path.join(packagePath, 'build', 'index.html')
 
-        this.app.use('/', express.static(uiBuildPath))
+        // Get the subpath from the environment, or assume it's at the root.
+        const appPath = process.env.SUBPATH ?? '/'
+
+        this.app.use(appPath, express.static(uiBuildPath))
+        this.app.use(appPath, indexRouter)
 
         // All other requests not handled will return React app
         this.app.use((req, res) => {
@@ -1061,9 +1068,11 @@ export async function start(): Promise<void> {
     serverApp = new App()
 
     const port = parseInt(process.env.PORT || '', 10) || 3000
+    const subpath = process.env.SUBPATH ? process.env.SUBPATH + '/socket.io' : ''
     const server = http.createServer(serverApp.app)
 
     const io = new Server(server, {
+        path: subpath,
         cors: {
             origin: '*'
         }
@@ -1073,7 +1082,7 @@ export async function start(): Promise<void> {
     await serverApp.config(io)
 
     server.listen(port, () => {
-        logger.info(`⚡️ [server]: Flowise Server is listening at ${port}`)
+        logger.info(`⚡️ [server]: Flowise Server is listening at ${port}${process.env.SUBPATH ?? ''}`)
     })
 }
 

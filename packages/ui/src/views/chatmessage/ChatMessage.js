@@ -26,7 +26,7 @@ import predictionApi from 'api/prediction'
 import useApi from 'hooks/useApi'
 
 // Const
-import { baseURL, maxScroll } from 'store/constant'
+import { coreURL, maxScroll, subpath } from 'store/constant'
 
 import robotPNG from 'assets/images/robot.png'
 import userPNG from 'assets/images/account.png'
@@ -245,7 +245,7 @@ export const ChatMessage = ({ open, chatflowid, isDialog }) => {
             getIsChatflowStreamingApi.request(chatflowid)
             scrollToBottom()
 
-            socket = socketIOClient(baseURL)
+            socket = socketIOClient(coreURL, { path: subpath + '/socket.io' })
 
             socket.on('connect', () => {
                 setSocketIOClientId(socket.id)
