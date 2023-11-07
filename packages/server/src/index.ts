@@ -9,7 +9,6 @@ import { Server } from 'socket.io'
 import logger from './utils/logger'
 import { expressRequestLogger } from './utils/logger'
 import { v4 as uuidv4 } from 'uuid'
-import OpenAI from 'openai'
 import { Between, IsNull, FindOptionsWhere } from 'typeorm'
 import {
     IChatFlow,
@@ -52,7 +51,6 @@ import { ChatFlow } from './database/entities/ChatFlow'
 import { ChatMessage } from './database/entities/ChatMessage'
 import { Credential } from './database/entities/Credential'
 import { Tool } from './database/entities/Tool'
-import { Assistant } from './database/entities/Assistant'
 import { ChatflowPool } from './ChatflowPool'
 import { CachePool } from './CachePool'
 import { ICommonObject, IMessage, INodeOptionsValue } from 'flowise-components'
@@ -482,8 +480,8 @@ export class App {
             const parsedFlowData: IReactFlowObject = JSON.parse(flowData)
             const nodes = parsedFlowData.nodes
 
-            if (isClearFromViewMessageDialog) {
-                await clearSessionMemoryFromViewMessageDialog(
+            if (isClearFromViewMessageDialog)
+                clearSessionMemoryFromViewMessageDialog(
                     nodes,
                     this.nodesPool.componentNodes,
                     chatId,
@@ -491,9 +489,7 @@ export class App {
                     sessionId,
                     memoryType
                 )
-            } else {
-                await clearAllSessionMemory(nodes, this.nodesPool.componentNodes, chatId, this.AppDataSource, sessionId)
-            }
+            else clearAllSessionMemory(nodes, this.nodesPool.componentNodes, chatId, this.AppDataSource, sessionId)
 
             const deleteOptions: FindOptionsWhere<ChatMessage> = { chatflowid, chatId }
             if (memoryType) deleteOptions.memoryType = memoryType
@@ -1498,24 +1494,17 @@ export class App {
                       logger,
                       appDataSource: this.AppDataSource,
                       databaseEntities,
-                      analytic: chatflow.analytic,
-                      chatId
+                      analytic: chatflow.analytic
                   })
                 : await nodeInstance.run(nodeToExecuteData, incomingInput.question, {
                       chatHistory,
                       logger,
                       appDataSource: this.AppDataSource,
                       databaseEntities,
-                      analytic: chatflow.analytic,
-                      chatId
+                      analytic: chatflow.analytic
                   })
 
             result = typeof result === 'string' ? { text: result } : result
-
-            // Retrieve threadId from assistant if exists
-            if (typeof result === 'object' && result.assistant) {
-                sessionId = result.assistant.threadId
-            }
 
             const userMessage: Omit<IChatMessage, 'id'> = {
                 role: 'userMessage',
