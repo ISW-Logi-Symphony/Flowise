@@ -59,6 +59,7 @@ import { ChatFlow } from './database/entities/ChatFlow'
 import { ChatMessage } from './database/entities/ChatMessage'
 import { Credential } from './database/entities/Credential'
 import { Tool } from './database/entities/Tool'
+import { Assistant } from './database/entities/Assistant'
 import { ChatflowPool } from './ChatflowPool'
 import { CachePool } from './CachePool'
 import {
@@ -816,13 +817,13 @@ export class App {
         // ----------------------------------------
 
         // Get all assistants
-        this.app.get('/api/v1/assistants', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/assistants', async (req: Request, res: Response) => {
             const assistants = await this.AppDataSource.getRepository(Assistant).find()
             return res.json(assistants)
         })
 
         // Get specific assistant
-        this.app.get('/api/v1/assistants/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/assistants/:id', async (req: Request, res: Response) => {
             const assistant = await this.AppDataSource.getRepository(Assistant).findOneBy({
                 id: req.params.id
             })
@@ -830,7 +831,7 @@ export class App {
         })
 
         // Get assistant object
-        this.app.get('/api/v1/openai-assistants/:id', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/openai-assistants/:id', async (req: Request, res: Response) => {
             const credentialId = req.query.credential as string
             const credential = await this.AppDataSource.getRepository(Credential).findOneBy({
                 id: credentialId
@@ -856,7 +857,7 @@ export class App {
         })
 
         // List available assistants
-        this.app.get('/api/v1/openai-assistants', async (req: Request, res: Response) => {
+        indexRouter.get('/api/v1/openai-assistants', async (req: Request, res: Response) => {
             const credentialId = req.query.credential as string
             const credential = await this.AppDataSource.getRepository(Credential).findOneBy({
                 id: credentialId
@@ -876,7 +877,7 @@ export class App {
         })
 
         // Add assistant
-        this.app.post('/api/v1/assistants', async (req: Request, res: Response) => {
+        indexRouter.post('/api/v1/assistants', async (req: Request, res: Response) => {
             const body = req.body
 
             if (!body.details) return res.status(500).send(`Invalid request body`)
@@ -996,7 +997,7 @@ export class App {
         })
 
         // Update assistant
-        this.app.put('/api/v1/assistants/:id', async (req: Request, res: Response) => {
+        indexRouter.put('/api/v1/assistants/:id', async (req: Request, res: Response) => {
             const assistant = await this.AppDataSource.getRepository(Assistant).findOneBy({
                 id: req.params.id
             })
@@ -1104,7 +1105,7 @@ export class App {
         })
 
         // Delete assistant
-        this.app.delete('/api/v1/assistants/:id', async (req: Request, res: Response) => {
+        indexRouter.delete('/api/v1/assistants/:id', async (req: Request, res: Response) => {
             const assistant = await this.AppDataSource.getRepository(Assistant).findOneBy({
                 id: req.params.id
             })
@@ -2099,6 +2100,11 @@ export class App {
                   })
 
             result = typeof result === 'string' ? { text: result } : result
+
+            // Retrieve threadId from assistant if exists
+            if (typeof result === 'object' && result.assistant) {
+                sessionId = result.assistant.threadId
+            }
 
             const userMessage: Omit<IChatMessage, 'id'> = {
                 role: 'userMessage',
