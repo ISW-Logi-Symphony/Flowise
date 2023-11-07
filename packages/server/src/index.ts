@@ -59,7 +59,6 @@ import { ChatFlow } from './database/entities/ChatFlow'
 import { ChatMessage } from './database/entities/ChatMessage'
 import { Credential } from './database/entities/Credential'
 import { Tool } from './database/entities/Tool'
-import { Assistant } from './database/entities/Assistant'
 import { ChatflowPool } from './ChatflowPool'
 import { CachePool } from './CachePool'
 import {
@@ -2100,11 +2099,6 @@ export class App {
                   })
 
             result = typeof result === 'string' ? { text: result } : result
-
-            // Retrieve threadId from assistant if exists
-            if (typeof result === 'object' && result.assistant) {
-                sessionId = result.assistant.threadId
-            }
 
             const userMessage: Omit<IChatMessage, 'id'> = {
                 role: 'userMessage',
