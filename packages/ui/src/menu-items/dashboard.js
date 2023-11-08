@@ -65,14 +65,6 @@ const dashboard = {
             icon: icons.IconLock,
             breadcrumbs: true
         },
-        // {
-        //     id: 'apikey',
-        //     // title: 'API Keys',
-        //     type: 'item',
-        //     url: '/apikey',
-        //     icon: icons.IconKey,
-        //     breadcrumbs: true
-        // },
         {
             id: 'settings',
             title: 'Settings',
