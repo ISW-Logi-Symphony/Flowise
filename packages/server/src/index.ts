@@ -1323,7 +1323,8 @@ export class App {
         const uiHtmlPath = path.join(packagePath, 'build', 'index.html')
 
         // Get the subpath from the environment, or assume it's at the root.
-        const appPath = process.env.SUBPATH ?? '/'
+        // Modified to default to /aichatbot.
+        const appPath = process.env.SUBPATH ?? '/aichatbot'
 
         this.app.use(appPath, express.static(uiBuildPath))
         this.app.use(appPath, indexRouter)
@@ -1872,7 +1873,7 @@ export async function start(): Promise<void> {
     await serverApp.config(io)
 
     server.listen(port, () => {
-        logger.info(`⚡️ [server]: Flowise Server is listening at ${port}${process.env.SUBPATH ?? ''}`)
+        logger.info(`⚡️ [server]: Flowise Server is listening at ${port}${process.env.SUBPATH ?? '/aichatbot'}`)
     })
 }
 
