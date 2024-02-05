@@ -28,6 +28,7 @@ services:
             - LOG_PATH=${LOG_PATH}
             - BLOB_STORAGE_PATH=${BLOB_STORAGE_PATH}
             - DISABLE_FLOWISE_TELEMETRY=${DISABLE_FLOWISE_TELEMETRY}
+            - LOGI_SYMPHONY_URL=${LOGI_SYMPHONY_URL}
         ports:
             - '${PORT}:${PORT}'
         volumes:
