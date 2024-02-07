@@ -119,6 +119,13 @@ export class App {
     }
 
     async config(socketIO?: Server) {
+        // Logi Symphony authorization check.
+        if (process.env.LOGI_SYMPHONY_URL) {
+            const importPath = './utils/LogiSymphony/logisymphony'
+            const logiSymphony = await import(importPath)
+            await logiSymphony.setupRequestAuthorization(this.app)
+        }
+
         // Limit is needed to allow sending/receiving base64 encoded string
         this.app.use(express.json({ limit: '50mb' }))
         this.app.use(express.urlencoded({ limit: '50mb', extended: true }))
@@ -174,13 +181,6 @@ export class App {
                     whitelistURLs.some((url) => req.url.includes(url)) ? next() : basicAuthMiddleware(req, res, next)
                 } else next()
             })
-        }
-
-        // Logi Symphony authorization check.
-        if (process.env.LOGI_SYMPHONY_URL) {
-            const importPath = './utils/LogiSymphony/logisymphony'
-            const logiSymphony = await import(importPath)
-            logiSymphony.setupRequestAuthorization(this.app)
         }
 
         const upload = multer({ dest: `${path.join(__dirname, '..', 'uploads')}/` })
