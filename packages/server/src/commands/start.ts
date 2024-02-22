@@ -134,7 +134,7 @@ export default class Start extends Command {
 
         // Disable langchain warnings
         process.env.LANGCHAIN_SUPPRESS_MIGRATION_WARNINGS = 'true'
-        
+
         // Symphony
         if (flags.LOGI_SYMPHONY_URL) process.env.LOGI_SYMPHONY_URL = flags.LOGI_SYMPHONY_URL
 
