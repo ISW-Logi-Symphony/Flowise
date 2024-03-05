@@ -573,7 +573,7 @@ formData.append("openAIApiKey[openAIEmbeddings_0]", "sk-my-openai-2nd-key")`
                             ))}
                         </Tabs>
                     </div>
-                    <div style={{ display: 'none', flex: 20 }}>
+                    <div style={{ flex: 20 }}>
                         <Dropdown
                             name='SelectKey'
                             disableClearable={true}
