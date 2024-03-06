@@ -1677,6 +1677,13 @@ export class App {
             const chatflowid = req.params.id
             let incomingInput: IncomingInput = req.body
 
+            // Logi Symphony session ID override config injection check.
+            if (process.env.LOGI_SYMPHONY_URL) {
+                const importPath = './utils/LogiSymphony/logisymphony'
+                const logiSymphony = await import(importPath)
+                logiSymphony.checkSessionIdOverrideConfig(req, incomingInput)
+            }
+
             const chatflow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
                 id: chatflowid
             })
