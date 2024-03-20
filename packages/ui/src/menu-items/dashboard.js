@@ -1,8 +1,19 @@
 // assets
-import { IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconRobot, IconVariable } from '@tabler/icons'
+import {
+    IconHome,
+    IconHierarchy,
+    IconBuildingStore,
+    IconKey,
+    IconTool,
+    IconLock,
+    IconRobot,
+    IconVariable,
+    IconMenu2,
+    IconSettings
+} from '@tabler/icons'
 
 // constant
-const icons = { IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconRobot, IconVariable }
+const icons = { IconHome, IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconRobot, IconVariable, IconMenu2, IconSettings }
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -11,6 +22,20 @@ const dashboard = {
     title: '',
     type: 'group',
     children: [
+        {
+            id: 'expandList',
+            type: 'item',
+            icon: icons.IconMenu2,
+            breadcrumbs: true
+        },
+        {
+            id: 'home',
+            title: 'Home',
+            type: 'item',
+            url: '/',
+            icon: icons.IconHome,
+            external: true
+        },
         {
             id: 'chatflows',
             title: 'Chatflows',
@@ -66,8 +91,14 @@ const dashboard = {
             url: '/apikey',
             icon: icons.IconKey,
             breadcrumbs: true
+        },
+        {
+            id: 'settings',
+            title: 'Settings',
+            type: 'item',
+            icon: icons.IconSettings,
+            breadcrumbs: true
         }
     ]
 }
-
 export default dashboard

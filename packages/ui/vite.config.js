@@ -16,6 +16,7 @@ export default defineConfig({
     build: {
         outDir: './build'
     },
+    base: process.env.VITA_SUBPATH ?? '/aichatbot',
     server: {
         open: true,
         port: process.env.VITE_PORT ?? 8080

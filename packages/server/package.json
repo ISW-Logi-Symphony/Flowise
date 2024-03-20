@@ -43,7 +43,7 @@
         "cypress:ci": "START_SERVER_AND_TEST_INSECURE=1 start-server-and-test start https-get://localhost:3000 cypress:run"
     },
     "keywords": [],
-    "homepage": "https://flowiseai.com",
+    "homepage": "/aichatbot",
     "author": {
         "name": "Henry Heng",
         "email": "henryheng@flowiseai.com"
