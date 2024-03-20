@@ -1,15 +1,14 @@
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles'
-import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material'
+import { AppBar, Box, CssBaseline, Toolbar } from '@mui/material'
 
 // project imports
-import Header from './Header'
 import Sidebar from './Sidebar'
-import { drawerWidth } from '@/store/constant'
+import { drawerIconWidth } from '@/store/constant'
 import { SET_MENU } from '@/store/actions'
 
 // styles
@@ -23,17 +22,17 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
             duration: theme.transitions.duration.leavingScreen
         }),
         [theme.breakpoints.up('md')]: {
-            marginLeft: -(drawerWidth - 20),
-            width: `calc(100% - ${drawerWidth}px)`
+            marginLeft: -(drawerIconWidth - 20),
+            width: `calc(100% - ${drawerIconWidth}px)`
         },
         [theme.breakpoints.down('md')]: {
             marginLeft: '20px',
-            width: `calc(100% - ${drawerWidth}px)`,
+            width: `calc(100% - ${drawerIconWidth}px)`,
             padding: '16px'
         },
         [theme.breakpoints.down('sm')]: {
             marginLeft: '10px',
-            width: `calc(100% - ${drawerWidth}px)`,
+            width: `calc(100% - ${drawerIconWidth}px)`,
             padding: '16px',
             marginRight: '10px'
         }
@@ -46,7 +45,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
         marginLeft: 0,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
-        width: `calc(100% - ${drawerWidth}px)`,
+        width: `calc(100% - ${drawerIconWidth}px)`,
         [theme.breakpoints.down('md')]: {
             marginLeft: '20px'
         },
@@ -60,7 +59,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
 
 const MainLayout = () => {
     const theme = useTheme()
-    const matchDownMd = useMediaQuery(theme.breakpoints.down('lg'))
+    const [setTrigger] = useState(0)
 
     // Handle left drawer
     const leftDrawerOpened = useSelector((state) => state.customization.opened)
@@ -68,11 +67,6 @@ const MainLayout = () => {
     const handleLeftDrawerToggle = () => {
         dispatch({ type: SET_MENU, opened: !leftDrawerOpened })
     }
-
-    useEffect(() => {
-        setTimeout(() => dispatch({ type: SET_MENU, opened: !matchDownMd }), 0)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [matchDownMd])
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -88,13 +82,17 @@ const MainLayout = () => {
                     transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
                 }}
             >
-                <Toolbar>
-                    <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
-                </Toolbar>
+                <Toolbar />
             </AppBar>
 
             {/* drawer */}
-            <Sidebar drawerOpen={leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
+            <Sidebar
+                drawerOpen={leftDrawerOpened}
+                drawerToggle={handleLeftDrawerToggle}
+                toggleSettingsPopper={() => {
+                    setTrigger((trigger) => trigger + 1)
+                }}
+            />
 
             {/* main content */}
             <Main theme={theme} open={leftDrawerOpened}>

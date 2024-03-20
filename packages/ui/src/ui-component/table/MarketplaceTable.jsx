@@ -10,11 +10,7 @@ import Paper from '@mui/material/Paper'
 import Chip from '@mui/material/Chip'
 import { Button, Typography } from '@mui/material'
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white
-    },
+const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14
     }
