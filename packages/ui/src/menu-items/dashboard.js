@@ -1,30 +1,8 @@
 // assets
-import {
-    IconUsersGroup,
-    IconHierarchy,
-    IconBuildingStore,
-    IconKey,
-    IconTool,
-    IconLock,
-    IconRobot,
-    IconVariable,
-    IconFiles,
-    IconListCheck
-} from '@tabler/icons-react'
+import { IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconRobot, IconVariable, IconFiles, IconSettings } from '@tabler/icons'
 
 // constant
-const icons = {
-    IconListCheck,
-    IconUsersGroup,
-    IconHierarchy,
-    IconBuildingStore,
-    IconKey,
-    IconTool,
-    IconLock,
-    IconRobot,
-    IconVariable,
-    IconFiles
-}
+const icons = { IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconRobot, IconVariable, IconFiles, IconSettings }
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -33,6 +11,20 @@ const dashboard = {
     title: '',
     type: 'group',
     children: [
+        {
+            id: 'expandList',
+            type: 'item',
+            icon: icons.IconMenu2,
+            breadcrumbs: true
+        },
+        {
+            id: 'home',
+            title: 'Home',
+            type: 'item',
+            url: '/',
+            icon: icons.IconHome,
+            external: true
+        },
         {
             id: 'chatflows',
             title: 'Chatflows',
@@ -112,8 +104,14 @@ const dashboard = {
             url: '/document-stores',
             icon: icons.IconFiles,
             breadcrumbs: true
+        },
+        {
+            id: 'settings',
+            title: 'Settings',
+            type: 'item',
+            icon: icons.IconSettings,
+            breadcrumbs: true
         }
     ]
 }
-
 export default dashboard
