@@ -47,7 +47,8 @@ export default class Start extends Command {
         LANGCHAIN_PROJECT: Flags.string(),
         DISABLE_FLOWISE_TELEMETRY: Flags.string(),
         MODEL_LIST_CONFIG_JSON: Flags.string(),
-        LOGI_SYMPHONY_URL: Flags.string()
+        LOGI_SYMPHONY_URL: Flags.string(),
+        LOGI_SYMPHONY_VDD_URL: Flags.string()
     }
 
     async stopProcess() {
@@ -141,6 +142,7 @@ export default class Start extends Command {
         
         // Symphony
         if (flags.LOGI_SYMPHONY_URL) process.env.LOGI_SYMPHONY_URL = flags.LOGI_SYMPHONY_URL
+        if (flags.LOGI_SYMPHONY_VDD_URL) process.env.LOGI_SYMPHONY_VDD_URL = flags.LOGI_SYMPHONY_VDD_URL
 
         await (async () => {
             try {
