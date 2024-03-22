@@ -34,6 +34,7 @@ services:
             - GLOBAL_AGENT_HTTPS_PROXY=${GLOBAL_AGENT_HTTPS_PROXY}
             - GLOBAL_AGENT_NO_PROXY=${GLOBAL_AGENT_NO_PROXY}
             - LOGI_SYMPHONY_URL=${LOGI_SYMPHONY_URL}
+            - LOGI_SYMPHONY_VDD_URL=${LOGI_SYMPHONY_VDD_URL}
         ports:
             - '${PORT}:${PORT}'
         volumes:
