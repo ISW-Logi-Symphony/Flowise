@@ -51,6 +51,7 @@ services:
             - REDIS_KEEP_ALIVE=${REDIS_KEEP_ALIVE}
             - ENABLE_BULLMQ_DASHBOARD=${ENABLE_BULLMQ_DASHBOARD}
             - LOGI_SYMPHONY_URL=${LOGI_SYMPHONY_URL}
+            - LOGI_SYMPHONY_VDD_URL=${LOGI_SYMPHONY_VDD_URL}
         ports:
             - '${PORT}:${PORT}'
         healthcheck:
