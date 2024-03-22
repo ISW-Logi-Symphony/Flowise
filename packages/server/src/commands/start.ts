@@ -53,7 +53,8 @@ export default class Start extends Command {
         S3_STORAGE_ACCESS_KEY_ID: Flags.string(),
         S3_STORAGE_SECRET_ACCESS_KEY: Flags.string(),
         S3_STORAGE_REGION: Flags.string(),
-        LOGI_SYMPHONY_URL: Flags.string()
+        LOGI_SYMPHONY_URL: Flags.string(),
+        LOGI_SYMPHONY_VDD_URL: Flags.string()
     }
 
     async stopProcess() {
@@ -145,6 +146,7 @@ export default class Start extends Command {
         
         // Symphony
         if (flags.LOGI_SYMPHONY_URL) process.env.LOGI_SYMPHONY_URL = flags.LOGI_SYMPHONY_URL
+        if (flags.LOGI_SYMPHONY_VDD_URL) process.env.LOGI_SYMPHONY_VDD_URL = flags.LOGI_SYMPHONY_VDD_URL
 
         // Storage
         if (flags.STORAGE_TYPE) process.env.STORAGE_TYPE = flags.STORAGE_TYPE
