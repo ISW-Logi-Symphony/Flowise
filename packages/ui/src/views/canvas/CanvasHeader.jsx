@@ -28,7 +28,7 @@ import useApi from '@/hooks/useApi'
 
 // utils
 import { generateExportFlowData } from '@/utils/genericHelper'
-import { baseURL } from '@/store/constant'
+import { uiBaseURL } from '@/store/constant'
 import { closeSnackbar as closeSnackbarAction, enqueueSnackbar as enqueueSnackbarAction, SET_CHATFLOW } from '@/store/actions'
 
 // ==============================|| CANVAS HEADER ||============================== //
@@ -123,11 +123,11 @@ const CanvasHeader = ({ chatflow, isAgentCanvas, isAgentflowV2, handleSaveFlow, 
                 flowData = JSON.stringify(parsedFlowData)
                 localStorage.setItem('duplicatedFlowData', flowData)
                 if (isAgentflowV2) {
-                    window.open(`${baseURL}/v2/agentcanvas`, '_blank')
+                    window.open(`${uiBaseURL}/v2/agentcanvas`, '_blank')
                 } else if (isAgentCanvas) {
-                    window.open(`${baseURL}/agentcanvas`, '_blank')
+                    window.open(`${uiBaseURL}/agentcanvas`, '_blank')
                 } else {
-                    window.open(`${baseURL}/canvas`, '_blank')
+                    window.open(`${uiBaseURL}/canvas`, '_blank')
                 }
             } catch (e) {
                 console.error(e)
