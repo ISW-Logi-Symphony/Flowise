@@ -21,7 +21,7 @@ const DocumentStoreStatus = ({ status, isTableView }) => {
             case 'UPSERTED':
                 return ['#cdf5d8', '#00e676', '#00c853']
             case 'NEW':
-                return ['#e3f2fd', '#2196f3', '#1e88e5']
+                return ['#e3f2fd', '#2196f3', '#278838']
             default:
                 return customization.isDarkMode
                     ? [theme.palette.grey[300], theme.palette.grey[500], theme.palette.grey[700]]
