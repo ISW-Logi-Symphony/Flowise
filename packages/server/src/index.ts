@@ -87,6 +87,10 @@ export class App {
             await logiSymphony.setupRequestAuthorization(this.app)
         }
 
+        // Get the subpath from the environment, or assume it's at the root.
+        // Modified to default to /aichatbot.
+        const appPath = process.env.SUBPATH ?? '/aichatbot'
+
         // Limit is needed to allow sending/receiving base64 encoded string
         const flowise_file_size_limit = process.env.FLOWISE_FILE_SIZE_LIMIT || '50mb'
         this.app.use(express.json({ limit: flowise_file_size_limit }))
@@ -157,7 +161,7 @@ export class App {
                     // Step 2: Check if the req path is case sensitive
                     if (URL_CASE_SENSITIVE_REGEX.test(req.path)) {
                         // Step 3: Check if the req path is in the whitelist
-                        const isWhitelisted = whitelistURLs.some((url) => req.path.startsWith(url))
+                        const isWhitelisted = whitelistURLs.some((url) => req.path.startsWith(appPath + url))
                         if (isWhitelisted) {
                             next()
                         } else if (req.headers['x-request-from'] === 'internal') {
@@ -179,16 +183,23 @@ export class App {
             })
         } else {
             this.app.use(async (req, res, next) => {
+                // Always allow OPTIONS call.
+                if (req.method == 'OPTIONS') {
+                    next()
+                    return
+                }
+
                 // Step 1: Check if the req path contains /api/v1 regardless of case
                 if (URL_CASE_INSENSITIVE_REGEX.test(req.path)) {
                     // Step 2: Check if the req path is case sensitive
                     if (URL_CASE_SENSITIVE_REGEX.test(req.path)) {
                         // Step 3: Check if the req path is in the whitelist
-                        const isWhitelisted = whitelistURLs.some((url) => req.path.startsWith(url))
+                        const isWhitelisted = whitelistURLs.some((url) => req.path.startsWith(appPath + url))
                         if (isWhitelisted) {
                             next()
-                        } else if (req.headers['x-request-from'] === 'internal') {
-                            next()
+                            // We don't care for internal calls, must auth for Symphony.
+                            // } else if (req.headers['x-request-from'] === 'internal') {
+                            //     next()
                         } else {
                             const isKeyValidated = await validateAPIKey(req)
                             if (!isKeyValidated) {
@@ -205,10 +216,6 @@ export class App {
                 }
             })
         }
-
-        // Get the subpath from the environment, or assume it's at the root.
-        // Modified to default to /aichatbot.
-        const appPath = process.env.SUBPATH ?? '/aichatbot'
 
         this.app.use(appPath + '/api/v1', flowiseApiV1Router)
 
@@ -276,7 +283,9 @@ export async function start(): Promise<void> {
     await serverApp.config(io)
 
     server.listen(port, host, () => {
-        logger.info(`⚡️ [server]: Flowise Server is listening at ${host ? 'http://' + host : ''}:${port}${process.env.SUBPATH ?? '/aichatbot'}`)
+        logger.info(
+            `⚡️ [server]: Flowise Server is listening at ${host ? 'http://' + host : ''}:${port}${process.env.SUBPATH ?? '/aichatbot'}`
+        )
     })
 }
 
