@@ -77,7 +77,7 @@ import useApi from '@/hooks/useApi'
 import { flowContext } from '@/store/context/ReactFlowContext'
 
 // Const
-import { coreURL, maxScroll, subpath } from '@/store/constant'
+import { baseURL, maxScroll } from '@/store/constant'
 import { enqueueSnackbar as enqueueSnackbarAction, closeSnackbar as closeSnackbarAction } from '@/store/actions'
 
 // Utils
