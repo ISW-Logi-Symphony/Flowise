@@ -76,7 +76,9 @@ export abstract class BaseCommand extends Command {
         REDIS_KEY: Flags.string(),
         REDIS_CA: Flags.string(),
         REDIS_KEEP_ALIVE: Flags.string(),
-        ENABLE_BULLMQ_DASHBOARD: Flags.string()
+        ENABLE_BULLMQ_DASHBOARD: Flags.string(),
+        LOGI_SYMPHONY_URL: Flags.string(),
+        LOGI_SYMPHONY_VDD_URL: Flags.string()
     }
 
     protected async stopProcess() {
@@ -176,6 +178,10 @@ export abstract class BaseCommand extends Command {
 
         // Model list config
         if (flags.MODEL_LIST_CONFIG_JSON) process.env.MODEL_LIST_CONFIG_JSON = flags.MODEL_LIST_CONFIG_JSON
+
+        // Symphony
+        if (flags.LOGI_SYMPHONY_URL) process.env.LOGI_SYMPHONY_URL = flags.LOGI_SYMPHONY_URL
+        if (flags.LOGI_SYMPHONY_VDD_URL) process.env.LOGI_SYMPHONY_VDD_URL = flags.LOGI_SYMPHONY_VDD_URL
 
         // Storage
         if (flags.STORAGE_TYPE) process.env.STORAGE_TYPE = flags.STORAGE_TYPE
