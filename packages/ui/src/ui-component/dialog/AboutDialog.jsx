@@ -35,7 +35,7 @@ const AboutDialog = ({ show, onCancel }) => {
                         name: '25.1',
                         html_url: 'https://docs-symphony.zendesk.com/hc/en-us/sections/25422182631693',
                         currentVersion: currentVersionData.data.version,
-                        published_at: 'December 28, 2025'
+                        published_at: 'March 31, 2025'
                     }
                     setData(finalData)
                 })
