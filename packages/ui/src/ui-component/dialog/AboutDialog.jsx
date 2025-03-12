@@ -33,7 +33,7 @@ const AboutDialog = ({ show, onCancel }) => {
                 .then(([currentVersionData]) => {
                     const finalData = {
                         name: '25.1',
-                        html_url: 'https://docs-symphony.zendesk.com/hc/en-us/sections/25422182631693',
+                        html_url: 'https://logi-symphony-v25.insightsoftware.com/hc/en-us/sections/34938414456077',
                         currentVersion: currentVersionData.data.version,
                         published_at: 'March 31, 2025'
                     }
