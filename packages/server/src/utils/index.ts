@@ -574,7 +574,7 @@ export const buildFlow = async ({
 
             // Only override the config if its status is true
             // Or if Logi Symphony node
-            if (overrideConfig && (apiOverrideStatus || flowNodeData.label == 'Logi Symphony')) {
+            if (overrideConfig && (apiOverrideStatus || flowNodeData.label.includes('Logi Symphony'))) {
                 flowNodeData = replaceInputsWithConfig(flowNodeData, overrideConfig, nodeOverrides, variableOverrides)
             }
 
@@ -1071,7 +1071,7 @@ export const replaceInputsWithConfig = (
 
     const isParameterEnabled = (nodeType: string, paramName: string): boolean => {
         // Always allow Logi Symphony properties even if disabled.
-        if (nodeType == 'Logi Symphony') {
+        if (nodeType.includes('Logi Symphony')) {
             return true
         }
 
