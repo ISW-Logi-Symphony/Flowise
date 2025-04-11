@@ -102,7 +102,7 @@ const initEndingNode = async ({
         throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Node not found`)
     }
 
-    if (incomingInput.overrideConfig && apiOverrideStatus) {
+    if (incomingInput.overrideConfig && (apiOverrideStatus || nodeToExecute.data.label.includes('Logi Symphony'))) {
         nodeToExecute.data = replaceInputsWithConfig(nodeToExecute.data, incomingInput.overrideConfig, nodeOverrides, variableOverrides)
     }
 
