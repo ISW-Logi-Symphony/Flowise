@@ -1,6 +1,7 @@
 // assets
 import {
     IconUsersGroup,
+    IconListCheck,
     IconHierarchy,
     IconBuildingStore,
     IconKey,
@@ -17,6 +18,7 @@ import {
 // constant
 const icons = {
     IconUsersGroup,
+    IconListCheck,
     IconHierarchy,
     IconBuildingStore,
     IconKey,
