@@ -10,6 +10,7 @@ import MainCard from '@/ui-component/cards/MainCard'
 import ItemCard from '@/ui-component/cards/ItemCard'
 import { gridSpacing } from '@/store/constant'
 import AgentsEmptySVG from '@/assets/images/agents_empty.svg'
+import NoAccessDialog from '@/ui-component/dialog/NoAccessDialog'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
 import ViewHeader from '@/layout/MainLayout/ViewHeader'
@@ -39,7 +40,7 @@ const Agentflows = () => {
     const [images, setImages] = useState({})
     const [icons, setIcons] = useState({})
     const [search, setSearch] = useState('')
-    const { error, setError } = useError()
+    const [noAccessDialogOpen, setNoAccessDialogOpenOpen] = useState(false)
 
     const getAllAgentflows = useApi(chatflowsApi.getAllAgentflows)
     const [view, setView] = useState(localStorage.getItem('flowDisplayStyle') || 'card')
@@ -94,7 +95,11 @@ const Agentflows = () => {
 
     useEffect(() => {
         if (getAllAgentflows.error) {
-            setError(getAllAgentflows.error)
+            if (getAllAgentflows.error?.response?.status === 401) {
+                setNoAccessDialogOpenOpen(true)
+            } else {
+                setError(getAllAgentflows.error)
+            }
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -277,6 +282,8 @@ const Agentflows = () => {
                     )}
                 </Stack>
             )}
+
+            <NoAccessDialog show={noAccessDialogOpen} />
             <ConfirmDialog />
         </MainCard>
     )

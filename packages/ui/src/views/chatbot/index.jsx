@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { FullPageChat } from 'flowise-embed-react'
 
+// Project import
+import NoAccessDialog from '@/ui-component/dialog/NoAccessDialog'
+
 // API
 import chatflowsApi from '@/api/chatflows'
 
@@ -24,6 +27,7 @@ const ChatbotFull = () => {
 
     const [chatflow, setChatflow] = useState(null)
     const [chatbotTheme, setChatbotTheme] = useState({})
+    const [noAccessDialogOpen, setNoAccessDialogOpenOpen] = useState(false)
     const [isLoading, setLoading] = useState(true)
     const [chatbotOverrideConfig, setChatbotOverrideConfig] = useState({})
 
@@ -35,6 +39,23 @@ const ChatbotFull = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        if (getSpecificChatflowFromPublicApi.error) {
+            if (getSpecificChatflowFromPublicApi.error?.response?.status === 401) {
+                setNoAccessDialogOpenOpen(true)
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getSpecificChatflowFromPublicApi.error])
+
+    useEffect(() => {
+        if (getSpecificChatflowApi.error) {
+            if (getSpecificChatflowApi.error?.response?.status === 401) {
+                setNoAccessDialogOpenOpen(true)
+            }
+        }
+    }, [getSpecificChatflowApi.error])
 
     useEffect(() => {
         if (getSpecificChatflowFromPublicApi.data || getSpecificChatflowApi.data) {
@@ -109,6 +130,7 @@ const ChatbotFull = () => {
                             theme={{ chatWindow: chatbotTheme }}
                         />
                     )}
+                    <NoAccessDialog show={noAccessDialogOpen} />
                 </>
             ) : null}
         </>

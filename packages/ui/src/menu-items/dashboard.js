@@ -2,6 +2,7 @@
 import {
     IconList,
     IconUsersGroup,
+    IconListCheck,
     IconHierarchy,
     IconBuildingStore,
     IconKey,
@@ -23,11 +24,16 @@ import {
     IconLockCheck,
     IconFileDatabase,
     IconShieldLock,
-    IconListCheck
+    IconListCheck,
+    IconMenu2,
+    IconHome,
+    IconSettings
 } from '@tabler/icons-react'
 
 // constant
 const icons = {
+    IconUsersGroup,
+    IconListCheck,
     IconHierarchy,
     IconUsersGroup,
     IconBuildingStore,
@@ -51,7 +57,10 @@ const icons = {
     IconLockCheck,
     IconFileDatabase,
     IconShieldLock,
-    IconListCheck
+    IconListCheck,
+    IconMenu2,
+    IconHome,
+    IconSettings
 }
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
@@ -66,6 +75,20 @@ const dashboard = {
             title: '',
             type: 'group',
             children: [
+                {
+                    id: 'expandList',
+                    type: 'item',
+                    icon: icons.IconMenu2,
+                    breadcrumbs: true
+                },
+                {
+                    id: 'home',
+                    title: 'Home',
+                    type: 'item',
+                    url: '/',
+                    icon: icons.IconHome,
+                    external: true
+                },
                 {
                     id: 'chatflows',
                     title: 'Chatflows',
@@ -155,44 +178,7 @@ const dashboard = {
                     icon: icons.IconFiles,
                     breadcrumbs: true,
                     permission: 'documentStores:view'
-                }
-            ]
-        },
-        {
-            id: 'evaluations',
-            title: 'Evaluations',
-            type: 'group',
-            children: [
-                {
-                    id: 'datasets',
-                    title: 'Datasets',
-                    type: 'item',
-                    url: '/datasets',
-                    icon: icons.IconDatabase,
-                    breadcrumbs: true,
-                    display: 'feat:datasets',
-                    permission: 'datasets:view'
                 },
-                {
-                    id: 'evaluators',
-                    title: 'Evaluators',
-                    type: 'item',
-                    url: '/evaluators',
-                    icon: icons.IconTestPipe,
-                    breadcrumbs: true,
-                    display: 'feat:evaluators',
-                    permission: 'evaluators:view'
-                },
-                {
-                    id: 'evaluations',
-                    title: 'Evaluations',
-                    type: 'item',
-                    url: '/evaluations',
-                    icon: icons.IconChartHistogram,
-                    breadcrumbs: true,
-                    display: 'feat:evaluations',
-                    permission: 'evaluations:view'
-                }
             ]
         },
         {
@@ -284,10 +270,16 @@ const dashboard = {
                     icon: icons.IconSettings,
                     breadcrumbs: true,
                     display: 'feat:account'
+                },
+                {
+                    id: 'settings',
+                    title: 'Settings',
+                    type: 'item',
+                    icon: icons.IconSettings,
+                    breadcrumbs: true
                 }
             ]
         }
     ]
 }
-
 export default dashboard

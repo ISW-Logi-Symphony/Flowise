@@ -41,6 +41,7 @@ export default defineConfig(async ({ mode }) => {
         build: {
             outDir: './build'
         },
+        base: '/aichatbot',
         server: {
             open: true,
             proxy,

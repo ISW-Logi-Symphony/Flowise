@@ -10,6 +10,7 @@ import MainCard from '@/ui-component/cards/MainCard'
 import ItemCard from '@/ui-component/cards/ItemCard'
 import { gridSpacing } from '@/store/constant'
 import WorkflowEmptySVG from '@/assets/images/workflow_empty.svg'
+import NoAccessDialog from '@/ui-component/dialog/NoAccessDialog'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
 import { StyledPermissionButton } from '@/ui-component/button/RBACButtons'
@@ -38,7 +39,7 @@ const Chatflows = () => {
     const [isLoading, setLoading] = useState(true)
     const [images, setImages] = useState({})
     const [search, setSearch] = useState('')
-    const { error, setError } = useError()
+    const [noAccessDialogOpen, setNoAccessDialogOpenOpen] = useState(false)
 
     const getAllChatflowsApi = useApi(chatflowsApi.getAllChatflows)
     const [view, setView] = useState(localStorage.getItem('flowDisplayStyle') || 'card')
@@ -73,6 +74,16 @@ const Chatflows = () => {
         getAllChatflowsApi.request()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        if (getAllChatflowsApi.error) {
+            if (getAllChatflowsApi.error?.response?.status === 401) {
+                setNoAccessDialogOpenOpen(true)
+            } else {
+                setError(getAllChatflowsApi.error)
+            }
+        }
+    }, [getAllChatflowsApi.error])
 
     useEffect(() => {
         setLoading(getAllChatflowsApi.loading)
@@ -210,6 +221,7 @@ const Chatflows = () => {
                 </Stack>
             )}
             <ConfirmDialog />
+            <NoAccessDialog show={noAccessDialogOpen} />
         </MainCard>
     )
 }

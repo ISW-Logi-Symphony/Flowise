@@ -47,7 +47,7 @@
         "test": "jest --runInBand --detectOpenHandles --forceExit"
     },
     "keywords": [],
-    "homepage": "https://flowiseai.com",
+    "homepage": "/aichatbot",
     "author": {
         "name": "Henry Heng",
         "email": "henryheng@flowiseai.com"

@@ -1,5 +1,6 @@
 // material-ui
-import { Box, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
+import PropTypes from 'prop-types'
 
 // project imports
 import NavGroup from './NavGroup'
@@ -7,11 +8,16 @@ import { menuItems } from '@/menu-items'
 
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
-const MenuList = () => {
-    const navItems = menuItems.items.map((item) => {
+const MenuList = ({ drawerToggle, toggleSettingsPopper }) => {
+    const toggleSettingsPopperCallBack = () => {
+        toggleSettingsPopper()
+    }
+    const navItems = menuItem.items.map((item) => {
         switch (item.type) {
             case 'group':
-                return <NavGroup key={item.id} item={item} />
+                return (
+                    <NavGroup key={item.id} item={item} drawerToggle={drawerToggle} toggleSettingsPopper={toggleSettingsPopperCallBack} />
+                )
             default:
                 return (
                     <Typography key={item.id} variant='h6' color='error' align='center'>
@@ -22,6 +28,10 @@ const MenuList = () => {
     })
 
     return <Box>{navItems}</Box>
+}
+MenuList.propTypes = {
+    drawerToggle: PropTypes.func,
+    toggleSettingsPopper: PropTypes.func
 }
 
 export default MenuList

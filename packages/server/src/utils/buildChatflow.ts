@@ -109,7 +109,7 @@ const initEndingNode = async ({
         throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Node not found`)
     }
 
-    if (incomingInput.overrideConfig && apiOverrideStatus) {
+    if (incomingInput.overrideConfig && (apiOverrideStatus || nodeToExecute.data.label.includes('Logi Symphony'))) {
         nodeToExecute.data = replaceInputsWithConfig(nodeToExecute.data, incomingInput.overrideConfig, nodeOverrides, variableOverrides)
     }
 
@@ -916,6 +916,13 @@ export const utilBuildChatflow = async (req: Request, isInternal: boolean = fals
             }
             chatflow.analytic = JSON.stringify(newEval)
         }
+    }
+
+    // Logi Symphony session ID override config injection check.
+    if (process.env.LOGI_SYMPHONY_URL) {
+        const importPath = './LogiSymphony/logisymphony'
+        const logiSymphony = await import(importPath)
+        logiSymphony.checkSessionIdOverrideConfig(req, incomingInput)
     }
 
     try {
