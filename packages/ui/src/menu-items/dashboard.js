@@ -1,6 +1,7 @@
 // assets
 import {
     IconUsersGroup,
+    IconListCheck,
     IconHierarchy,
     IconBuildingStore,
     IconKey,
@@ -9,13 +10,15 @@ import {
     IconRobot,
     IconVariable,
     IconFiles,
-    IconListCheck
+    IconMenu2,
+    IconHome,
+    IconSettings
 } from '@tabler/icons-react'
 
 // constant
 const icons = {
-    IconListCheck,
     IconUsersGroup,
+    IconListCheck,
     IconHierarchy,
     IconBuildingStore,
     IconKey,
@@ -23,7 +26,10 @@ const icons = {
     IconLock,
     IconRobot,
     IconVariable,
-    IconFiles
+    IconFiles,
+    IconMenu2,
+    IconHome,
+    IconSettings
 }
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
@@ -33,6 +39,20 @@ const dashboard = {
     title: '',
     type: 'group',
     children: [
+        {
+            id: 'expandList',
+            type: 'item',
+            icon: icons.IconMenu2,
+            breadcrumbs: true
+        },
+        {
+            id: 'home',
+            title: 'Home',
+            type: 'item',
+            url: '/',
+            icon: icons.IconHome,
+            external: true
+        },
         {
             id: 'chatflows',
             title: 'Chatflows',
@@ -112,8 +132,14 @@ const dashboard = {
             url: '/document-stores',
             icon: icons.IconFiles,
             breadcrumbs: true
+        },
+        {
+            id: 'settings',
+            title: 'Settings',
+            type: 'item',
+            icon: icons.IconSettings,
+            breadcrumbs: true
         }
     ]
 }
-
 export default dashboard

@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { FullPageChat } from 'flowise-embed-react'
-import { useNavigate } from 'react-router-dom'
 
 // Project import
-import LoginDialog from '@/ui-component/dialog/LoginDialog'
+import NoAccessDialog from '@/ui-component/dialog/NoAccessDialog'
 
 // API
 import chatflowsApi from '@/api/chatflows'
@@ -29,19 +28,12 @@ const ChatbotFull = () => {
 
     const [chatflow, setChatflow] = useState(null)
     const [chatbotTheme, setChatbotTheme] = useState({})
-    const [loginDialogOpen, setLoginDialogOpen] = useState(false)
-    const [loginDialogProps, setLoginDialogProps] = useState({})
+    const [noAccessDialogOpen, setNoAccessDialogOpenOpen] = useState(false)
     const [isLoading, setLoading] = useState(true)
     const [chatbotOverrideConfig, setChatbotOverrideConfig] = useState({})
 
     const getSpecificChatflowFromPublicApi = useApi(chatflowsApi.getSpecificChatflowFromPublicEndpoint)
     const getSpecificChatflowApi = useApi(chatflowsApi.getSpecificChatflow)
-
-    const onLoginClick = (username, password) => {
-        localStorage.setItem('username', username)
-        localStorage.setItem('password', password)
-        navigate(0)
-    }
 
     useEffect(() => {
         getSpecificChatflowFromPublicApi.request(chatflowId)
@@ -52,15 +44,7 @@ const ChatbotFull = () => {
     useEffect(() => {
         if (getSpecificChatflowFromPublicApi.error) {
             if (getSpecificChatflowFromPublicApi.error?.response?.status === 401) {
-                if (localStorage.getItem('username') && localStorage.getItem('password')) {
-                    getSpecificChatflowApi.request(chatflowId)
-                } else {
-                    setLoginDialogProps({
-                        title: 'Login',
-                        confirmButtonName: 'Login'
-                    })
-                    setLoginDialogOpen(true)
-                }
+                setNoAccessDialogOpenOpen(true)
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,11 +53,7 @@ const ChatbotFull = () => {
     useEffect(() => {
         if (getSpecificChatflowApi.error) {
             if (getSpecificChatflowApi.error?.response?.status === 401) {
-                setLoginDialogProps({
-                    title: 'Login',
-                    confirmButtonName: 'Login'
-                })
-                setLoginDialogOpen(true)
+                setNoAccessDialogOpenOpen(true)
             }
         }
     }, [getSpecificChatflowApi.error])
@@ -151,7 +131,7 @@ const ChatbotFull = () => {
                             theme={{ chatWindow: chatbotTheme }}
                         />
                     )}
-                    <LoginDialog show={loginDialogOpen} dialogProps={loginDialogProps} onConfirm={onLoginClick} />
+                    <NoAccessDialog show={noAccessDialogOpen} />
                 </>
             ) : null}
         </>

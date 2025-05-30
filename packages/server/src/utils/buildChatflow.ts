@@ -104,7 +104,7 @@ const initEndingNode = async ({
         throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Node not found`)
     }
 
-    if (incomingInput.overrideConfig && apiOverrideStatus) {
+    if (incomingInput.overrideConfig && (apiOverrideStatus || nodeToExecute.data.label.includes('Logi Symphony'))) {
         nodeToExecute.data = replaceInputsWithConfig(nodeToExecute.data, incomingInput.overrideConfig, nodeOverrides, variableOverrides)
     }
 
@@ -849,6 +849,13 @@ export const utilBuildChatflow = async (req: Request, isInternal: boolean = fals
     const files = (req.files as Express.Multer.File[]) || []
     const abortControllerId = `${chatflow.id}_${chatId}`
     const isTool = req.get('flowise-tool') === 'true'
+
+    // Logi Symphony session ID override config injection check.
+    if (process.env.LOGI_SYMPHONY_URL) {
+        const importPath = './LogiSymphony/logisymphony'
+        const logiSymphony = await import(importPath)
+        logiSymphony.checkSessionIdOverrideConfig(req, incomingInput)
+    }
 
     try {
         // Validate API Key if its external API request

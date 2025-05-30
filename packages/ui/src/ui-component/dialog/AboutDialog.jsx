@@ -27,14 +27,15 @@ const AboutDialog = ({ show, onCancel }) => {
                     'x-request-from': 'internal'
                 }
             }
-            const latestReleaseReq = axios.get('https://api.github.com/repos/FlowiseAI/Flowise/releases/latest')
             const currentVersionReq = axios.get(`${baseURL}/api/v1/version`, { ...config })
 
-            Promise.all([latestReleaseReq, currentVersionReq])
-                .then(([latestReleaseData, currentVersionData]) => {
+            Promise.all([currentVersionReq])
+                .then(([currentVersionData]) => {
                     const finalData = {
-                        ...latestReleaseData.data,
-                        currentVersion: currentVersionData.data.version
+                        name: '25.1',
+                        html_url: 'https://logi-symphony-v25.insightsoftware.com/hc/en-us/sections/34938414456077',
+                        currentVersion: currentVersionData.data.version,
+                        published_at: 'March 31, 2025'
                     }
                     setData(finalData)
                 })
@@ -56,7 +57,7 @@ const AboutDialog = ({ show, onCancel }) => {
             aria-describedby='alert-dialog-description'
         >
             <DialogTitle sx={{ fontSize: '1rem' }} id='alert-dialog-title'>
-                Flowise Version
+                Version
             </DialogTitle>
             <DialogContent>
                 {data && (
@@ -64,8 +65,8 @@ const AboutDialog = ({ show, onCancel }) => {
                         <Table aria-label='simple table'>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Current Version</TableCell>
-                                    <TableCell>Latest Version</TableCell>
+                                    <TableCell>Flowise Version</TableCell>
+                                    <TableCell>Logi Symphony Version</TableCell>
                                     <TableCell>Published At</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -85,6 +86,11 @@ const AboutDialog = ({ show, onCancel }) => {
                         </Table>
                     </TableContainer>
                 )}
+            </DialogContent>
+            <DialogContent>
+                <a style={{ display: 'flex', justifyContent: 'center' }} target='_blank' rel='noreferrer' href='https://www.flowiseai.com/'>
+                    Powered by Flowise
+                </a>
             </DialogContent>
         </Dialog>
     ) : null

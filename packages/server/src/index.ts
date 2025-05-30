@@ -121,6 +121,17 @@ export class App {
     }
 
     async config() {
+        // Logi Symphony authorization check.
+        if (process.env.LOGI_SYMPHONY_URL) {
+            const importPath = './utils/LogiSymphony/logisymphony'
+            const logiSymphony = await import(importPath)
+            await logiSymphony.setupRequestAuthorization(this.app)
+        }
+
+        // Get the subpath from the environment, or assume it's at the root.
+        // Modified to default to /aichatbot.
+        const appPath = process.env.SUBPATH ?? '/aichatbot'
+
         // Limit is needed to allow sending/receiving base64 encoded string
         const flowise_file_size_limit = process.env.FLOWISE_FILE_SIZE_LIMIT || '50mb'
         this.app.use(express.json({ limit: flowise_file_size_limit }))
@@ -141,6 +152,15 @@ export class App {
                 res.setHeader('Content-Security-Policy', csp)
                 next()
             }
+        })
+
+        // Middleware to add HSTS headers
+        this.app.use((req, res, next) => {
+            const isHttps = req.secure || req.get('X-Forwarded-Proto') === 'https'
+            if (isHttps) {
+                res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
+            }
+            next()
         })
 
         // Switch off the default 'X-Powered-By: Express' header
@@ -168,7 +188,7 @@ export class App {
                     // Step 2: Check if the req path is case sensitive
                     if (URL_CASE_SENSITIVE_REGEX.test(req.path)) {
                         // Step 3: Check if the req path is in the whitelist
-                        const isWhitelisted = whitelistURLs.some((url) => req.path.startsWith(url))
+                        const isWhitelisted = whitelistURLs.some((url) => req.path.startsWith(appPath + url))
                         if (isWhitelisted) {
                             next()
                         } else if (req.headers['x-request-from'] === 'internal') {
@@ -190,16 +210,23 @@ export class App {
             })
         } else {
             this.app.use(async (req, res, next) => {
+                // Always allow OPTIONS call.
+                if (req.method == 'OPTIONS') {
+                    next()
+                    return
+                }
+
                 // Step 1: Check if the req path contains /api/v1 regardless of case
                 if (URL_CASE_INSENSITIVE_REGEX.test(req.path)) {
                     // Step 2: Check if the req path is case sensitive
                     if (URL_CASE_SENSITIVE_REGEX.test(req.path)) {
                         // Step 3: Check if the req path is in the whitelist
-                        const isWhitelisted = whitelistURLs.some((url) => req.path.startsWith(url))
+                        const isWhitelisted = whitelistURLs.some((url) => req.path.startsWith(appPath + url))
                         if (isWhitelisted) {
                             next()
-                        } else if (req.headers['x-request-from'] === 'internal') {
-                            next()
+                            // We don't care for internal calls, must auth for Symphony.
+                            // } else if (req.headers['x-request-from'] === 'internal') {
+                            //     next()
                         } else {
                             const isKeyValidated = await validateAPIKey(req)
                             if (!isKeyValidated) {
@@ -239,12 +266,12 @@ export class App {
             }
         }
 
-        this.app.use('/api/v1', flowiseApiV1Router)
+        this.app.use(appPath + '/api/v1', flowiseApiV1Router)
 
         // ----------------------------------------
         // Configure number of proxies in Host Environment
         // ----------------------------------------
-        this.app.get('/api/v1/ip', (request, response) => {
+        this.app.get(appPath + '/api/v1/ip', (request, response) => {
             response.send({
                 ip: request.ip,
                 msg: 'Check returned IP address in the response. If it matches your current IP address ( which you can get by going to http://ip.nfriedly.com/ or https://api.ipify.org/ ), then the number of proxies is correct and the rate limiter should now work correctly. If not, increase the number of proxies by 1 and restart Cloud-Hosted Flowise until the IP address matches your own. Visit https://docs.flowiseai.com/configuration/rate-limit#cloud-hosted-rate-limit-setup-guide for more information.'
@@ -252,7 +279,7 @@ export class App {
         })
 
         if (process.env.MODE === MODE.QUEUE && process.env.ENABLE_BULLMQ_DASHBOARD === 'true') {
-            this.app.use('/admin/queues', this.queueManager.getBullBoardRouter())
+            this.app.use(appPath + '/admin/queues', this.queueManager.getBullBoardRouter())
         }
 
         // ----------------------------------------
@@ -263,7 +290,7 @@ export class App {
         const uiBuildPath = path.join(packagePath, 'build')
         const uiHtmlPath = path.join(packagePath, 'build', 'index.html')
 
-        this.app.use('/', express.static(uiBuildPath))
+        this.app.use(appPath, express.static(uiBuildPath))
 
         // All other requests not handled will return React app
         this.app.use((req: Request, res: Response) => {
@@ -301,7 +328,9 @@ export async function start(): Promise<void> {
     await serverApp.config()
 
     server.listen(port, host, () => {
-        logger.info(`⚡️ [server]: Flowise Server is listening at ${host ? 'http://' + host : ''}:${port}`)
+        logger.info(
+            `⚡️ [server]: Flowise Server is listening at ${host ? 'http://' + host : ''}:${port}${process.env.SUBPATH ?? '/aichatbot'}`
+        )
     })
 }
 

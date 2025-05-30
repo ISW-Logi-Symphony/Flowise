@@ -221,6 +221,13 @@ export const upsertVector = async (req: Request, isInternal: boolean = false) =>
         const chatId = incomingInput.chatId ?? incomingInput.overrideConfig?.sessionId ?? uuidv4()
         const files = (req.files as Express.Multer.File[]) || []
 
+        // Logi Symphony session ID override config injection check.
+        if (process.env.LOGI_SYMPHONY_URL) {
+            const importPath = './LogiSymphony/logisymphony'
+            const logiSymphony = await import(importPath)
+            logiSymphony.checkSessionIdOverrideConfig(req, incomingInput)
+        }
+
         if (!isInternal) {
             const isKeyValidated = await validateChatflowAPIKey(req, chatflow)
             if (!isKeyValidated) {
