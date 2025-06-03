@@ -24,10 +24,8 @@ import {
     IconLockCheck,
     IconFileDatabase,
     IconShieldLock,
-    IconListCheck,
     IconMenu2,
-    IconHome,
-    IconSettings
+    IconHome
 } from '@tabler/icons-react'
 
 // constant
@@ -35,7 +33,6 @@ const icons = {
     IconUsersGroup,
     IconListCheck,
     IconHierarchy,
-    IconUsersGroup,
     IconBuildingStore,
     IconList,
     IconKey,
@@ -57,10 +54,8 @@ const icons = {
     IconLockCheck,
     IconFileDatabase,
     IconShieldLock,
-    IconListCheck,
     IconMenu2,
-    IconHome,
-    IconSettings
+    IconHome
 }
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
@@ -178,7 +173,7 @@ const dashboard = {
                     icon: icons.IconFiles,
                     breadcrumbs: true,
                     permission: 'documentStores:view'
-                },
+                }
             ]
         },
         {

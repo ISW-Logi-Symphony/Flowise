@@ -81,6 +81,10 @@ const _initializePassportMiddleware = async (app: express.Application) => {
 }
 
 export const initializeJwtCookieMiddleware = async (app: express.Application, identityManager: IdentityManager) => {
+    // Get the subpath from the environment, or assume it's at the root.
+    // Modified to default to /aichatbot.
+    const appPath = process.env.SUBPATH ?? '/aichatbot'
+
     await _initializePassportMiddleware(app)
 
     const strategy = getAuthStrategy(jwtOptions)
@@ -178,7 +182,7 @@ export const initializeJwtCookieMiddleware = async (app: express.Application, id
         )
     )
 
-    app.post('/api/v1/auth/resolve', async (req, res) => {
+    app.post(appPath + '/api/v1/auth/resolve', async (req, res) => {
         // check for the organization, if empty redirect to the organization setup page for OpenSource and Enterprise Versions
         // for Cloud (Horizontal) version, redirect to the signin page
         const expressApp = getRunningExpressApp()
@@ -191,6 +195,7 @@ export const initializeJwtCookieMiddleware = async (app: express.Application, id
         await queryRunner.connect()
         const registeredOrganizationCount = await orgService.countOrganizations(queryRunner)
         await queryRunner.release()
+        //return res.status(HttpStatusCode.Ok)
         if (registeredOrganizationCount === 0) {
             switch (platform) {
                 case Platform.ENTERPRISE:
@@ -213,7 +218,7 @@ export const initializeJwtCookieMiddleware = async (app: express.Application, id
         }
     })
 
-    app.post('/api/v1/auth/refreshToken', async (req, res) => {
+    app.post(appPath + '/api/v1/auth/refreshToken', async (req, res) => {
         const refreshToken = req.cookies.refreshToken
         if (!refreshToken) return res.sendStatus(401)
 
@@ -250,7 +255,7 @@ export const initializeJwtCookieMiddleware = async (app: express.Application, id
         })
     })
 
-    app.post('/api/v1/auth/login', (req, res, next?) => {
+    app.post(appPath + '/api/v1/auth/login', (req, res, next?) => {
         passport.authenticate('login', async (err: any, user: LoggedInUser) => {
             try {
                 if (err || !user) {
