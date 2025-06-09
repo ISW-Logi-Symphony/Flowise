@@ -32,10 +32,10 @@ const AboutDialog = ({ show, onCancel }) => {
             Promise.all([currentVersionReq])
                 .then(([currentVersionData]) => {
                     const finalData = {
-                        name: '25.1',
+                        name: '25.2',
                         html_url: 'https://logi-symphony-v25.insightsoftware.com/hc/en-us/sections/34938414456077',
                         currentVersion: currentVersionData.data.version,
-                        published_at: 'March 31, 2025'
+                        published_at: 'June 30, 2025'
                     }
                     setData(finalData)
                 })
