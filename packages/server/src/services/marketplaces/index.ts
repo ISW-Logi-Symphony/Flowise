@@ -107,39 +107,18 @@ const getAllTemplates = async () => {
             }
             templates.push(template)
         })
-        const sortedTemplates = templates.sort((a, b) => a.templateName.localeCompare(b.templateName))
+
+        // Move all templates starting with "Logi Symphony" to the top of marketplace.
+        const isLogiTemplate = (t: { templateName: string }) => t.templateName.startsWith('Logi Symphony')
+        const logiSymphonyTemplates = templates.filter(isLogiTemplate);
+        
+        const sortedTemplates = templates.filter((template) => !isLogiTemplate(template)).sort((a, b) => a.templateName.localeCompare(b.templateName))
         const FlowiseDocsQnAIndex = sortedTemplates.findIndex((tmp) => tmp.templateName === 'Flowise Docs QnA')
         if (FlowiseDocsQnAIndex > 0) {
             sortedTemplates.unshift(sortedTemplates.splice(FlowiseDocsQnAIndex, 1)[0])
         }
 
-        // Code to add Logi Symphony chatflows to the top of marketplace.
-        let SymphonyTemplate = sortedTemplates.findIndex((tmp) => tmp.templateName === 'Logi Symphony SQL')
-        if (SymphonyTemplate > 0) {
-            sortedTemplates.unshift(sortedTemplates.splice(SymphonyTemplate, 1)[0])
-        }
-
-        SymphonyTemplate = sortedTemplates.findIndex((tmp) => tmp.templateName === 'Logi Symphony Prompt Chaining')
-        if (SymphonyTemplate > 0) {
-            sortedTemplates.unshift(sortedTemplates.splice(SymphonyTemplate, 1)[0])
-        }
-
-        SymphonyTemplate = sortedTemplates.findIndex((tmp) => tmp.templateName === 'Logi Symphony Local')
-        if (SymphonyTemplate > 0) {
-            sortedTemplates.unshift(sortedTemplates.splice(SymphonyTemplate, 1)[0])
-        }
-
-        SymphonyTemplate = sortedTemplates.findIndex((tmp) => tmp.templateName === 'Logi Symphony Query Engine')
-        if (SymphonyTemplate > 0) {
-            sortedTemplates.unshift(sortedTemplates.splice(SymphonyTemplate, 1)[0])
-        }
-
-        SymphonyTemplate = sortedTemplates.findIndex((tmp) => tmp.templateName === 'Logi Symphony QnA')
-        if (SymphonyTemplate > 0) {
-            sortedTemplates.unshift(sortedTemplates.splice(SymphonyTemplate, 1)[0])
-        }
-
-        const dbResponse = sortedTemplates
+        const dbResponse = logiSymphonyTemplates.concat(sortedTemplates)
         return dbResponse
     } catch (error) {
         throw new InternalFlowiseError(
